@@ -1,0 +1,8 @@
+{
+    "slackToken" : "<YOUR_SLACK_TOKEN>",
+    "slackChannelID" : "<YOUR_SLACK_CHANNEL_ID>",
+    "repeatCount" : 1,
+    "dirs" : [
+        "<YOUR_PHOTO_DIR_PATH>"
+    ]
+}
