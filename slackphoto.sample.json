@@ -2,6 +2,7 @@
     "slackDomain" : "<YOUR_SLACK_DOMAIN>",
     "slackToken" : "<YOUR_SLACK_TOKEN>",
     "slackChannelID" : "<YOUR_SLACK_CHANNEL_ID>",
+    "slackRemoveLimitDay" : 15,
     "repeatCount" : 1,
     "dirs" : [
         "<YOUR_PHOTO_DIR_PATH>"
