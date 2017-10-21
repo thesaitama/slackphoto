@@ -1,4 +1,5 @@
 {
+    "slackDomain" : "<YOUR_SLACK_DOMAIN>",
     "slackToken" : "<YOUR_SLACK_TOKEN>",
     "slackChannelID" : "<YOUR_SLACK_CHANNEL_ID>",
     "repeatCount" : 1,

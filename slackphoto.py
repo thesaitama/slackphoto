@@ -3,7 +3,8 @@
 
 # slackphoto.py
 
-import os, sys
+import os
+import sys
 import time
 import json
 import random
@@ -14,6 +15,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 
 # Slack情報
+g_slackDomain = ''
 g_slackToken = ''
 g_slackBotToken = ''
 g_slackChannelID = ''
@@ -184,9 +186,7 @@ def loadSettings():
         # リピート設定の反映
         if('repeatCount' in g_settings.keys()):
             g_repeatCount = g_settings['repeatCount']
-
         return True
-    
     else:
         return False
 
