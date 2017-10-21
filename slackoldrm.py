@@ -11,7 +11,7 @@ import calendar
 from datetime import datetime, timedelta
 import requests
 
-# Slack情報
+# Slack設定
 g_slackDomain = ''
 g_slackToken = ''
 g_slackBotToken = ''
