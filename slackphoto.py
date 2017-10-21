@@ -14,7 +14,7 @@ import requests
 from PIL import Image
 from PIL.ExifTags import TAGS
 
-# Slack情報
+# Slack設定
 g_slackDomain = ''
 g_slackToken = ''
 g_slackBotToken = ''
@@ -25,7 +25,7 @@ g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.4.170920'
+__version__ = '0.1.5.171021'
 
 def slackPhotoMain():
     '''
@@ -51,6 +51,17 @@ def slackPhotoMain():
             photoPicker(paths)
     else:
         print 'no paths'
+
+def checkFilePathExt(filePath):
+    '''
+    ファイルパスから画像拡張子の確認
+    '''
+    path, ext = os.path.splitext(filePath)
+    extlist = ['jpg', 'jpe', 'jpeg', 'png', 'bmp']
+    if (ext.lower().lstrip('.') in extlist):
+        return True
+    else:
+        return False
 
 def photoPicker(paths):
     '''
@@ -149,7 +160,8 @@ def getFileList(dir):
     filteredList = []
     for fileName in fileList:
         if (fileName[0:1] != '.'):
-            if(fileName[-4:].lower() == '.jpg' or fileName[-5:].lower() == '.jpeg' or fileName[-4:].lower() == '.png'):
+            # ファイル拡張子を確認する
+            if(checkFilePathExt(fileName)):
                 filteredList.append(fileName)
 
     return filteredList
@@ -201,7 +213,7 @@ def sendSlackPhoto(filePath, channel, text):
             'channels': channel,
             'title': os.path.basename(filePath)
         }
-        r = requests.post("https://slack.com/api/files.upload", params=imgParam, files={'file':f})
+        r = requests.post('https://slack.com/api/files.upload', params=imgParam, files={'file':f})
         print r.status_code
 
 def sendSlackText(channel, text):
