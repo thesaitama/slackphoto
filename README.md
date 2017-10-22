@@ -53,6 +53,9 @@ pip install -r requirements.txt
 * Create New App (obtein token)
  https://api.slack.com/apps
 
+## License
+MIT
+
 ## Maintainer
 * Kazuhiro Komiya
 
