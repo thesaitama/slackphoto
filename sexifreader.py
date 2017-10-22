@@ -57,5 +57,4 @@ def getExifInfo(filePath):
 
 if __name__ == '__main__':
     pass
-    # testcode
     #print getExifInfo('test.jpg')

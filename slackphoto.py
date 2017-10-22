@@ -23,7 +23,7 @@ g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.5.171021'
+__version__ = '0.1.5.171022'
 
 def slackPhotoMain():
     '''
@@ -79,51 +79,6 @@ def photoPicker(paths):
         
         # 写真本体の投稿
         sendSlackPhoto(uploadFile, g_slackChannelID, uploadFile)
-
-def getExifInfo(filePath):
-    '''
-    Exif 情報の取得
-    '''
-    i = Image.open(filePath)
-
-    exif = i._getexif()
-
-    # Exif データの存在を確認する
-    if (exif is None):
-        return 'no Exif data.'
-
-    tagStr = '' # 出力文字列
-    date = ''
-    maker = ''
-    model = ''
-    software = ''
-
-    for tag, value in exif.items():
-        #  TIFF Tag MakerNote: 37500
-        if (tag != 37500): 
-            tagName = TAGS.get(tag)
-            #if (str(tagName) != 'None'):
-            print str(tagName) + ": " + str(value)
-            if (tagName == 'DateTimeOriginal'):
-                date = "".join(map(str, value))
-            elif (tagName == 'Make'):
-                maker = str(value).strip()
-            elif (tagName == 'Model'):
-                model = str(value).strip().strip('\x00')
-            elif (tagName == 'Software'):
-                software = str(value).strip().strip('\x00')
-
-    # モデル名の整形
-    model = model.replace(maker, '').strip()
-
-    tagStr = 'Date: %s\nCamera: %s %s' % (date, maker, model)
-
-    # Software名の整形
-    if(software != ''):
-        software = software.replace(model, '').strip()
-        tagStr += ' (%s)' % software
-
-    return tagStr
 
 def selectTargetFile(paths):
     '''
