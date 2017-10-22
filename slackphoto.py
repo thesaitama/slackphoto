@@ -10,9 +10,7 @@ import json
 import random
 import requests
 
-# PIL Image Info
-from PIL import Image
-from PIL.ExifTags import TAGS
+import sexifreader as spexif
 
 # Slack設定
 g_slackDomain = ''
@@ -76,7 +74,7 @@ def photoPicker(paths):
         
         # メッセージの投稿        
         fileMsg = ''
-        fileMsg = '%s\n%s' % (uploadFile, getExifInfo(uploadFile))
+        fileMsg = '%s\n%s' % (uploadFile, spexif.getExifInfo(uploadFile))
         sendSlackText(g_slackChannelID, fileMsg)
         
         # 写真本体の投稿
