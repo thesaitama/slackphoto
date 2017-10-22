@@ -10,7 +10,7 @@ import json
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
-def getExifInfo(filePath):
+def getExifInfo(filePath, debugMode=False):
     '''
     Exif 情報の取得
     '''
@@ -33,7 +33,9 @@ def getExifInfo(filePath):
         if (tag != 37500): 
             tagName = TAGS.get(tag)
             #if (str(tagName) != 'None'):
-            print str(tagName) + ": " + str(value)
+            if(debugMode):
+                print str(tagName) + ": " + str(value)
+                
             if (tagName == 'DateTimeOriginal'):
                 date = "".join(map(str, value))
             elif (tagName == 'Make'):
@@ -57,4 +59,4 @@ def getExifInfo(filePath):
 
 if __name__ == '__main__':
     pass
-    #print getExifInfo('test.jpg')
+    #print getExifInfo('test.jpg', true)
