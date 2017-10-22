@@ -16,14 +16,12 @@ g_slackDomain = ''
 g_slackToken = ''
 g_slackBotToken = ''
 g_slackChannelID = ''
-g_slackRemoveLimitDay = 15
+g_slackRemoveLimitDay = 0
 
 # 設定
 g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
-
-__version__ = '0.1.5.171021'
 
 def slackOldRmMain():
     '''
@@ -35,11 +33,15 @@ def slackOldRmMain():
     # 設定ファイルの読み込み
     loadSettings()
 
-    listData = getSlackOldFileList()
-    if(listData != {}):
-        deleteSlackOldFile(listData)
+    if(g_slackRemoveLimitDay != 0):
+        print 'start: slackoldrm'
+        listData = getSlackOldFileList()
+        if(listData != {}):
+            deleteSlackOldFile(listData)
+        else:
+            print 'no old files found.'
     else:
-        print 'no old files found.'
+        print 'cannceled: slackoldrm'
 
 def checkImgExt(ext):
     '''
