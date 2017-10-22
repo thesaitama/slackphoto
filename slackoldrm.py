@@ -54,7 +54,7 @@ def deleteSlackOldFile(listData):
         if(checkImgExt(slackFile['filetype'])):
             print 'deleting file %s (%s)' % (slackFile['name'], slackFile['timestamp'])
             timestamp = str(calendar.timegm(datetime.now().utctimetuple()))
-            deleteAPIUrl = 'https://%s.slack.com/api/files.delete?t=%s' % (g_settings['slackDomain'], timestamp)
+            deleteAPIUrl = 'https://slack.com/api/files.delete?t=%s' % (timestamp)
             requests.post(deleteAPIUrl, data = {
                 'token': g_settings['slackToken'], 'file': slackFile['id'], 
                 'set_active': 'true', '_attempts': '1'})

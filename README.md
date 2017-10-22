@@ -29,7 +29,6 @@ pip install -r requirements.txt
   + Edit slackphoto.json
   ```
   {
-    "slackDomain" : "<YOUR_SLACK_DOMAIN>",
     "slackToken" : "<YOUR_SLACK_TOKEN>",
     "slackChannelID" : "<YOUR_SLACK_CHANNEL_ID>",
     "slackRemoveLimitDay" : 15,
@@ -39,7 +38,6 @@ pip install -r requirements.txt
     ]
   }
   ```
-  + slackDomain: your Slack team url https://<SLACK_DOMAIN>.slack.com/
   + slackRemoveLimitDay: uploaded files delete after specified days.
   + repeatCount: repeat times.
   + dirs: multiple folder can be specified.
