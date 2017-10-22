@@ -56,4 +56,5 @@ def getExifInfo(filePath):
     return tagStr
 
 if __name__ == '__main__':
-    print getExifInfo('test.jpg')
+    pass
+    #print getExifInfo('test.jpg')
