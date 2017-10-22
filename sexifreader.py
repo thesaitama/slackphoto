@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# sexifreader.py
+
 import os
 import sys
 import time
@@ -15,7 +17,6 @@ def getExifInfo(filePath, debugMode=False):
     Exif 情報の取得
     '''
     i = Image.open(filePath)
-
     exif = i._getexif()
 
     # Exif データの存在を確認する
@@ -35,7 +36,7 @@ def getExifInfo(filePath, debugMode=False):
             #if (str(tagName) != 'None'):
             if(debugMode):
                 print str(tagName) + ": " + str(value)
-                
+
             if (tagName == 'DateTimeOriginal'):
                 date = "".join(map(str, value))
             elif (tagName == 'Make'):

@@ -14,13 +14,6 @@ import requests
 import sexifreader as spexif
 import slackoldrm as sloldrm
 
-# Slack設定
-g_slackDomain = ''
-g_slackToken = ''
-g_slackBotToken = ''
-g_slackChannelID = ''
-g_slackRemoveLimitDay = 0
-
 # 設定
 g_settings = {}
 g_settingPath = ''
@@ -48,7 +41,7 @@ def slackPhotoMain():
     # パスの検査
     if(len(paths) > 0):
         # photoPIcker の実行
-        for i in range(0, g_repeatCount):
+        for i in range(0, g_settings['repeatCount']):
             photoPicker(paths)
     else:
         print 'no paths'
@@ -81,10 +74,10 @@ def photoPicker(paths):
         # メッセージの投稿        
         fileMsg = ''
         fileMsg = '%s\n%s' % (uploadFile, spexif.getExifInfo(uploadFile))
-        sendSlackText(g_slackChannelID, fileMsg)
+        sendSlackText(g_settings['slackChannelID'], fileMsg)
         
         # 写真本体の投稿
-        sendSlackPhoto(uploadFile, g_slackChannelID, uploadFile)
+        sendSlackPhoto(uploadFile, g_settings['slackChannelID'], uploadFile)
 
 def selectTargetFile(paths):
     '''
@@ -134,37 +127,6 @@ def getDirList(path):
         for dir in dirs:
             yield os.path.join(root, dir)
 
-def loadSettings():
-    ''' 
-    設定情報を読み取る
-    '''
-    global g_settings, g_repeatCount
-    global g_slackDomain, g_slackToken, g_slackBotToken, g_slackChannelID, g_slackRemoveLimitDay
-
-    # 設定ファイルの存在を確認する
-    if (os.path.exists(g_settingPath)):
-        settingFile = open(g_settingPath, 'r') 
-        g_settings = json.load(settingFile)
-
-        # Slack設定反映
-        if('slackDomain' in g_settings.keys()):
-            g_slackDomain = g_settings['slackDomain']
-        if('slackToken' in g_settings.keys()):
-            g_slackToken = g_settings['slackToken']
-        if('slackBotToken' in g_settings.keys()):
-            g_slackBotToken = g_settings['slackBotToken']
-        if('slackChannelID' in g_settings.keys()):
-            g_slackChannelID = g_settings['slackChannelID']
-        if('slackRemoveLimitDay' in g_settings.keys()):
-            g_slackRemoveLimitDay = g_settings['slackRemoveLimitDay']
-        
-        # リピート設定の反映
-        if('repeatCount' in g_settings.keys()):
-            g_repeatCount = g_settings['repeatCount']
-        return True
-    else:
-        return False
-
 def sendSlackPhoto(filePath, channel, text):
     '''
     Slack に写真を投稿する
@@ -172,7 +134,7 @@ def sendSlackPhoto(filePath, channel, text):
     # 画像のアップロード
     with open(filePath, 'rb') as f:
         imgParam = {
-            'token': g_slackToken,
+            'token': g_settings['slackToken'],
             'channels': channel,
             'title': os.path.basename(filePath)
         }
@@ -184,10 +146,24 @@ def sendSlackText(channel, text):
     Slack にテキストを投稿する
     ''' 
     #　テキストメッセージの送信
-    sendUrl = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_slackToken, g_slackChannelID, text)
+    sendUrl = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
     #print sendUrl
     r = requests.post(sendUrl)
     print r.status_code
+
+def loadSettings():
+    ''' 
+    設定情報を読み取る
+    '''
+    global g_settings
+
+    # 設定ファイルの存在を確認する
+    if (os.path.exists(g_settingPath)):
+        settingFile = open(g_settingPath, 'r') 
+        g_settings = json.load(settingFile)
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     slackPhotoMain()
