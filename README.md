@@ -1,6 +1,5 @@
 # slackphoto
-A randam photo uploader for Slack.
-This Script post your photos at random to Slack.
+A randam photo uploader for Slack. This Script post your photos at random to Slack.
 You will discover unexpected discoveries when used between families.
 
 ## Requirements
