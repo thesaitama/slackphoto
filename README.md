@@ -23,7 +23,7 @@ cd slackphoto
 pip install -r requirements.txt
 ```
 * Configure JSON Settings file.
-  + Rename Smaple JSON File.
+  + Rename sample JSON File.
   ```
   mv slackphoto.sample.json slackphoto.json
   ```
@@ -45,10 +45,10 @@ pip install -r requirements.txt
   + repeatCount: repeat times.
   + dirs: multiple folder can be specified.
 * Set crontab
-```
-# m h  dom mon dow   command
-0 12 * * * python /<APP_DIR>/slackphoto.py > /dev/null
-```
+  ```
+  # m h  dom mon dow   command
+  0 12 * * * python /<APP_DIR>/slackphoto.py > /dev/null
+  ```
 
 ## Links
 * Create New App (obtein token)
