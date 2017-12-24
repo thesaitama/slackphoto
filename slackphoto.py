@@ -5,9 +5,9 @@
 
 import os
 import sys
-import time
 import json
 import random
+
 import requests
 
 # external functions
@@ -19,7 +19,7 @@ g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.5.171022a'
+__version__ = '0.1.6.171224'
 
 def slackPhotoMain():
     '''
@@ -32,7 +32,7 @@ def slackPhotoMain():
 
     # 設定ファイルの読み込み
     loadSettings()
-  
+ 
     # 設定データより 候補パスを取り出し
     for dir in g_settings['dirs']:
         for path in getDirList(dir):
@@ -69,13 +69,10 @@ def photoPicker(paths):
     uploadFile = selectTargetFile(paths)
 
     if(uploadFile != ''):
-        # Slack に投稿する
-        
-        # メッセージの投稿        
+        # Slack に投稿
         fileMsg = ''
         fileMsg = '%s\n%s' % (uploadFile, spexif.getExifInfo(uploadFile))
         sendSlackText(g_settings['slackChannelID'], fileMsg)
-        
         # 写真本体の投稿
         sendSlackPhoto(uploadFile, g_settings['slackChannelID'], uploadFile)
 
@@ -95,7 +92,6 @@ def selectTargetFile(paths):
             break
         else:
             print 'retry - selectTargetFile'
-    
     return ''
 
 def getFileList(dir):
@@ -104,7 +100,7 @@ def getFileList(dir):
     '''
     # ファイル一覧の作成
     files = os.listdir(dir)
-    fileList = [f for f in files 
+    fileList = [f for f in files
         if os.path.isfile(os.path.join(dir, f))
     ]
 
@@ -130,7 +126,7 @@ def getDirList(path):
 def sendSlackPhoto(filePath, channel, text):
     '''
     Slack に写真を投稿する
-    ''' 
+    '''
     # 画像のアップロード
     with open(filePath, 'rb') as f:
         imgParam = {
@@ -144,22 +140,22 @@ def sendSlackPhoto(filePath, channel, text):
 def sendSlackText(channel, text):
     '''
     Slack にテキストを投稿する
-    ''' 
-    #　テキストメッセージの送信
+    '''
+    # テキストメッセージの送信
     sendUrl = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
     #print sendUrl
     r = requests.post(sendUrl)
     print r.status_code
 
 def loadSettings():
-    ''' 
+    '''
     設定情報を読み取る
     '''
     global g_settings
 
     # 設定ファイルの存在を確認する
     if (os.path.exists(g_settingPath)):
-        settingFile = open(g_settingPath, 'r') 
+        settingFile = open(g_settingPath, 'r')
         g_settings = json.load(settingFile)
         return True
     else:

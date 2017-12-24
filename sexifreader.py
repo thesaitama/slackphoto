@@ -3,61 +3,61 @@
 
 # sexifreader.py
 
-import os
-import sys
-import time
-import json
-
 # PIL Image Info
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
 def getExifInfo(filePath, debugMode=False):
     '''
-    Exif 情報の取得
+    obtatin exif imformation
     '''
     i = Image.open(filePath)
     exif = i._getexif()
 
-    # Exif データの存在を確認する
+    # check exist Exif data
     if (exif is None):
         return 'no Exif data.'
 
-    tagStr = '' # 出力文字列
-    date = ''
+    output_str = '' # output string
+
+    raw_date = ''
+    date_str = ''
+    time_str = ''
     maker = ''
     model = ''
     software = ''
 
     for tag, value in exif.items():
-        #  TIFF Tag MakerNote: 37500
-        if (tag != 37500): 
-            tagName = TAGS.get(tag)
-            #if (str(tagName) != 'None'):
-            if(debugMode):
-                print str(tagName) + ": " + str(value)
+        #  TIFF Tag MakerNote is 37500
+        if (tag != 37500):
+            tag_name = TAGS.get(tag)
 
-            if (tagName == 'DateTimeOriginal'):
-                date = "".join(map(str, value))
-            elif (tagName == 'Make'):
+            # for Debug mode
+            if(debugMode):
+                print str(tag_name) + ': ' + str(value)
+
+            if (tag_name == 'DateTimeOriginal'):
+                raw_date = ''.join(map(str, value)).split(' ')
+                date_str = raw_date[0].replace(':', '/')
+                time_str = raw_date[1]
+            elif (tag_name == 'Make'):
                 maker = str(value).strip()
-            elif (tagName == 'Model'):
+            elif (tag_name == 'Model'):
                 model = str(value).strip().strip('\x00')
-            elif (tagName == 'Software'):
+            elif (tag_name == 'Software'):
                 software = str(value).strip().strip('\x00')
 
-    # モデル名の整形
+    # reformat  model name
     model = model.replace(maker, '').strip()
 
-    tagStr = 'Date: %s\nCamera: %s %s' % (date, maker, model)
+    output_str = 'Date: %s %s\nCamera: %s %s' % (date_str, time_str, maker, model)
 
-    # Software名の整形
+    # reformat software name
     if(software != ''):
         software = software.replace(model, '').strip()
-        tagStr += ' (%s)' % software
+        output_str += ' (%s)' % software
 
-    return tagStr
+    return output_str
 
 if __name__ == '__main__':
-    pass
-    #print getExifInfo('test.jpg', true)
+    print getExifInfo('test/test.jpg', True)

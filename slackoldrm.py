@@ -4,11 +4,11 @@
 # slackoldrm.py
 
 import os
-import sys
 import json
-import time
 import calendar
+
 from datetime import datetime, timedelta
+
 import requests
 
 # 設定
@@ -56,7 +56,7 @@ def deleteSlackOldFile(listData):
             timestamp = str(calendar.timegm(datetime.now().utctimetuple()))
             deleteAPIUrl = 'https://slack.com/api/files.delete?t=%s' % (timestamp)
             requests.post(deleteAPIUrl, data = {
-                'token': g_settings['slackToken'], 'file': slackFile['id'], 
+                'token': g_settings['slackToken'], 'file': slackFile['id'],
                 'set_active': 'true', '_attempts': '1'})
 
 def getSlackOldFileList():
@@ -78,18 +78,18 @@ def getSlackOldFileList():
         print response.text
 
 def loadSettings():
-    ''' 
+    '''
     設定情報を読み取る
     '''
     global g_settings
 
     # 設定ファイルの存在を確認する
     if (os.path.exists(g_settingPath)):
-        settingFile = open(g_settingPath, 'r') 
+        settingFile = open(g_settingPath, 'r')
         g_settings = json.load(settingFile)
         return True
-    else:
-        return False
+
+    return False
 
 if __name__ == '__main__':
     slackOldRmMain()
