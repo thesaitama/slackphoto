@@ -19,7 +19,7 @@ g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.6.171224'
+__version__ = '0.1.6.171224a'
 
 def slackPhotoMain():
     '''

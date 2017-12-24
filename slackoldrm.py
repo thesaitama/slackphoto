@@ -11,25 +11,24 @@ from datetime import datetime, timedelta
 
 import requests
 
-# 設定
 g_settings = {}
 g_settingPath = ''
 
 def slackOldRmMain():
     '''
-    メインルーチン
+    main routine
     '''
     global g_settingPath
     g_settingPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'slackphoto.json')
 
-    # 設定ファイルの読み込み
+    # load configration
     loadSettings()
 
     if(g_settings['slackRemoveLimitDay'] != 0):
         print 'start: slackoldrm'
-        listData = getSlackOldFileList()
-        if(listData != {}):
-            deleteSlackOldFile(listData)
+        list_data = getSlackOldFileList()
+        if(list_data != {}):
+            deleteSlackOldFile(list_data)
         else:
             print 'no old files found.'
     else:
@@ -37,7 +36,7 @@ def slackOldRmMain():
 
 def checkImgExt(ext):
     '''
-    画像拡張子の確認
+    check image file extention
     '''
     extlist = ['jpg', 'jpe', 'jpeg', 'png', 'bmp']
     if (ext.lower().lstrip('.') in extlist):
@@ -45,48 +44,48 @@ def checkImgExt(ext):
     else:
         return False
 
-def deleteSlackOldFile(listData):
+def deleteSlackOldFile(list_data):
     '''
-    古いファイルを削除する
+    remove old files
     '''
-    for slackFile in listData:
-        # 拡張子の確認
-        if(checkImgExt(slackFile['filetype'])):
-            print 'deleting file %s (%s)' % (slackFile['name'], slackFile['timestamp'])
+    for slack_file in list_data:
+        # check image files extension
+        if(checkImgExt(slack_file['filetype'])):
+            print 'deleting file %s (%s)' % (slack_file['name'], slack_file['timestamp'])
             timestamp = str(calendar.timegm(datetime.now().utctimetuple()))
-            deleteAPIUrl = 'https://slack.com/api/files.delete?t=%s' % (timestamp)
-            requests.post(deleteAPIUrl, data = {
-                'token': g_settings['slackToken'], 'file': slackFile['id'],
+            delete_api_url = 'https://slack.com/api/files.delete?t=%s' % (timestamp)
+            requests.post(delete_api_url, data = {
+                'token': g_settings['slackToken'], 'file': slack_file['id'],
                 'set_active': 'true', '_attempts': '1'})
 
 def getSlackOldFileList():
     '''
-    古いファイルリストを取得する
+    obtatin old files list
     '''
-    listAPIUrl = 'https://slack.com/api/files.list'
+    list_api_url = 'https://slack.com/api/files.list'
     date = str(calendar.timegm((datetime.now() + timedelta(-g_settings['slackRemoveLimitDay'])).utctimetuple()))
     data = {'token': g_settings['slackToken'], 'ts_to': date}
-    response = requests.post(listAPIUrl, data = data)
-    jsonData = response.json()
-    if ('files' in jsonData.keys()):
-        if len(jsonData['files']) == 0:
+    response = requests.post(list_api_url, data = data)
+    json_data = response.json()
+    if ('files' in json_data.keys()):
+        if (len(json_data['files']) == 0):
             return {}
         else:
-            return jsonData['files']
+            return json_data['files']
     else:
         print 'erorr'
         print response.text
 
 def loadSettings():
     '''
-    設定情報を読み取る
+    load configration
     '''
     global g_settings
 
-    # 設定ファイルの存在を確認する
+    # check configration file exist
     if (os.path.exists(g_settingPath)):
-        settingFile = open(g_settingPath, 'r')
-        g_settings = json.load(settingFile)
+        setting_file = open(g_settingPath, 'r')
+        g_settings = json.load(setting_file)
         return True
 
     return False
