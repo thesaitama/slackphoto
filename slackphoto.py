@@ -4,7 +4,6 @@
 # slackphoto.py
 
 import os
-import sys
 import json
 import random
 
@@ -14,44 +13,44 @@ import requests
 import sexifreader as spexif
 import slackoldrm as sloldrm
 
-# 設定
+# setting variables
 g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.6.171224a'
+__version__ = '0.1.6.171229'
 
 def slackPhotoMain():
     '''
-    メインルーチン
+    main routine
     '''
     paths = []
 
     global g_settingPath
     g_settingPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'slackphoto.json')
 
-    # 設定ファイルの読み込み
+    # load settings
     loadSettings()
  
-    # 設定データより 候補パスを取り出し
+    # obtain schedule viariable
     for dir in g_settings['dirs']:
         for path in getDirList(dir):
             paths.append(path)
 
-    # パスの検査
+    # check scheduled paths
     if(len(paths) > 0):
-        # photoPIcker の実行
+        # excute photoPicker
         for i in range(0, g_settings['repeatCount']):
             photoPicker(paths)
     else:
         print 'no paths'
 
-    # 古いファイルの削除
+    # remove old file from Slack
     sloldrm.slackOldRmMain()
 
 def checkFilePathExt(filePath):
     '''
-    ファイルパスから画像拡張子の確認
+    check file extention
     '''
     path, ext = os.path.splitext(filePath)
     extlist = ['jpg', 'jpe', 'jpeg', 'png', 'bmp']
@@ -64,23 +63,22 @@ def photoPicker(paths):
     '''
     photo-picker
     '''
-
-    # アップロードファイルをピックアップする
+    # pick up from file for upload
     uploadFile = selectTargetFile(paths)
 
     if(uploadFile != ''):
-        # Slack に投稿
+        # post message to Slack
         fileMsg = ''
         fileMsg = '%s\n%s' % (uploadFile, spexif.getExifInfo(uploadFile))
         sendSlackText(g_settings['slackChannelID'], fileMsg)
-        # 写真本体の投稿
+        # post photo data to Slack
         sendSlackPhoto(uploadFile, g_settings['slackChannelID'], uploadFile)
 
 def selectTargetFile(paths):
     '''
-    ターゲットになるファイルを探す
+    select upload target files
     '''
-    # 有効なファイルが見つかるまで 10回トライする
+    # retry 10 times
     for var in range(0, 10):
         pivotDir = random.randrange(0, len(paths), 1)
         fileList = getFileList(paths[pivotDir])
@@ -96,15 +94,15 @@ def selectTargetFile(paths):
 
 def getFileList(dir):
     '''
-    ディレクトリ内の有効ファイルリストを作成する
+    create file list of dir
     '''
-    # ファイル一覧の作成
+    # create file list
     files = os.listdir(dir)
     fileList = [f for f in files
         if os.path.isfile(os.path.join(dir, f))
     ]
 
-    # ファイルのフィルタリング
+    # filter file list
     filteredList = []
     for fileName in fileList:
         if (fileName[0:1] != '.'):
@@ -116,7 +114,7 @@ def getFileList(dir):
 
 def getDirList(path):
     '''
-    ディレクトリ内のディレクトリのリストを再帰的に作成する
+    create directry list (recursive) 
     '''
     for root, dirs, files in os.walk(path):
         yield root
@@ -125,9 +123,9 @@ def getDirList(path):
 
 def sendSlackPhoto(filePath, channel, text):
     '''
-    Slack に写真を投稿する
+    post a file to Slack
     '''
-    # 画像のアップロード
+    # upload a file
     with open(filePath, 'rb') as f:
         imgParam = {
             'token': g_settings['slackToken'],
@@ -139,21 +137,20 @@ def sendSlackPhoto(filePath, channel, text):
 
 def sendSlackText(channel, text):
     '''
-    Slack にテキストを投稿する
+    post a message to Slack
     '''
-    # テキストメッセージの送信
+    # post a message
     sendUrl = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
-    #print sendUrl
     r = requests.post(sendUrl)
     print r.status_code
 
 def loadSettings():
     '''
-    設定情報を読み取る
+    load settings
     '''
     global g_settings
 
-    # 設定ファイルの存在を確認する
+    # check setting file exists
     if (os.path.exists(g_settingPath)):
         settingFile = open(g_settingPath, 'r')
         g_settings = json.load(settingFile)
