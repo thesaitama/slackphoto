@@ -14,7 +14,7 @@ tested with Linux (Raspberry pi) and macOSX 10.13
 * Clone this repository.
 ```
 git clone https://github.com/thesaitama/slackphoto.git
-```   
+```
 * Install PIP.
 * Install dependencies.
 ```

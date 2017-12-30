@@ -18,7 +18,7 @@ g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.6.171229'
+__version__ = '0.1.7.171230'
 
 def slackPhotoMain():
     '''
@@ -87,7 +87,6 @@ def selectTargetFile(paths):
             filePath = os.path.join(paths[pivotDir], fileList[filePivot])
             print filePath
             return filePath
-            break
         else:
             print 'retry - selectTargetFile'
     return ''
@@ -114,7 +113,7 @@ def getFileList(dir):
 
 def getDirList(path):
     '''
-    create directry list (recursive) 
+    create directry list (recursive)
     '''
     for root, dirs, files in os.walk(path):
         yield root
@@ -155,8 +154,8 @@ def loadSettings():
         settingFile = open(g_settingPath, 'r')
         g_settings = json.load(settingFile)
         return True
-    else:
-        return False
+
+    return False
 
 if __name__ == '__main__':
     slackPhotoMain()
