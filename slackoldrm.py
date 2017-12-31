@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 
 import requests
 
+import slutil as slutil
+
 g_settings = {}
 g_settingPath = ''
 
@@ -34,23 +36,13 @@ def slackOldRmMain():
     else:
         print 'cannceled: slackoldrm'
 
-def checkImgExt(ext):
-    '''
-    check image file extention
-    '''
-    extlist = ['jpg', 'jpe', 'jpeg', 'png', 'bmp']
-    if (ext.lower().lstrip('.') in extlist):
-        return True
-    else:
-        return False
-
 def deleteSlackOldFile(list_data):
     '''
     remove old files
     '''
     for slack_file in list_data:
         # check image files extension
-        if(checkImgExt(slack_file['filetype'])):
+        if(slutil.checkFileExt(slack_file['filetype'])):
             print 'deleting file %s (%s)' % (slack_file['name'], slack_file['timestamp'])
             timestamp = str(calendar.timegm(datetime.now().utctimetuple()))
             delete_api_url = 'https://slack.com/api/files.delete?t=%s' % (timestamp)

@@ -10,6 +10,7 @@ import random
 import requests
 
 # external functions
+import slutil as slutil
 import sexifreader as spexif
 import slackoldrm as sloldrm
 
@@ -18,7 +19,7 @@ g_settings = {}
 g_settingPath = ''
 g_repeatCount = 1
 
-__version__ = '0.1.7.171230'
+__version__ = '0.1.7.171231'
 
 def slackPhotoMain():
     '''
@@ -40,24 +41,13 @@ def slackPhotoMain():
     # check scheduled paths
     if(len(paths) > 0):
         # excute photoPicker
-        for i in range(0, g_settings['repeatCount']):
+        for index in range(0, g_settings['repeatCount']):
             photoPicker(paths)
     else:
         print 'no paths'
 
     # remove old file from Slack
     sloldrm.slackOldRmMain()
-
-def checkFilePathExt(filePath):
-    '''
-    check file extention
-    '''
-    path, ext = os.path.splitext(filePath)
-    extlist = ['jpg', 'jpe', 'jpeg', 'png', 'bmp']
-    if (ext.lower().lstrip('.') in extlist):
-        return True
-    else:
-        return False
 
 def photoPicker(paths):
     '''
@@ -105,7 +95,7 @@ def getFileList(dir):
     for file_name in file_list:
         if (file_name[0:1] != '.'):
             # check file extention
-            if(checkFilePathExt(file_name)):
+            if(slutil.checkFilePathExt(file_name)):
                 filtered_list.append(file_name)
 
     return filtered_list

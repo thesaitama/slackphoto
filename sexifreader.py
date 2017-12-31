@@ -47,7 +47,7 @@ def getExifInfo(filePath, debugMode=False):
             elif (tag_name == 'Software'):
                 software = str(value).strip().strip('\x00')
 
-    # reformat  model name
+    # reformat model name
     model = model.replace(maker, '').strip()
 
     output_str = 'Date: %s %s\nCamera: %s %s' % (date_str, time_str, maker, model)
