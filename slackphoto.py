@@ -64,31 +64,30 @@ def photoPicker(paths):
     photo-picker
     '''
     # pick up from file for upload
-    uploadFile = selectTargetFile(paths)
+    upload_file = selectTargetFile(paths)
 
-    if(uploadFile != ''):
+    if(upload_file != ''):
         # post message to Slack
-        fileMsg = ''
-        fileMsg = '%s\n%s' % (uploadFile, spexif.getExifInfo(uploadFile))
-        sendSlackText(g_settings['slackChannelID'], fileMsg)
+        file_msg = '%s\n%s' % (upload_file, spexif.getExifInfo(upload_file))
+        sendSlackText(g_settings['slackChannelID'], file_msg)
         # post photo data to Slack
-        sendSlackPhoto(uploadFile, g_settings['slackChannelID'], uploadFile)
+        sendSlackPhoto(upload_file, g_settings['slackChannelID'], upload_file)
 
 def selectTargetFile(paths):
     '''
     select upload target files
     '''
     # retry 10 times
-    for var in range(0, 10):
-        pivotDir = random.randrange(0, len(paths), 1)
-        fileList = getFileList(paths[pivotDir])
-        if (len(fileList) >= 1):
-            filePivot = random.randrange(0, len(fileList), 1)
-            filePath = os.path.join(paths[pivotDir], fileList[filePivot])
-            print filePath
-            return filePath
+    for index in range(0, 10):
+        pivot_dir = random.randrange(0, len(paths), 1)
+        file_list = getFileList(paths[pivot_dir])
+        if (len(file_list) >= 1):
+            file_pivot = random.randrange(0, len(file_list), 1)
+            file_path = os.path.join(paths[pivot_dir], file_list[file_pivot])
+            print file_path
+            return file_path
         else:
-            print 'retry - selectTargetFile'
+            print 'retry: selectTargetFile'
     return ''
 
 def getFileList(dir):
@@ -97,19 +96,19 @@ def getFileList(dir):
     '''
     # create file list
     files = os.listdir(dir)
-    fileList = [f for f in files
+    file_list = [f for f in files
         if os.path.isfile(os.path.join(dir, f))
     ]
 
     # filter file list
-    filteredList = []
-    for fileName in fileList:
-        if (fileName[0:1] != '.'):
-            # ファイル拡張子を確認する
-            if(checkFilePathExt(fileName)):
-                filteredList.append(fileName)
+    filtered_list = []
+    for file_name in file_list:
+        if (file_name[0:1] != '.'):
+            # check file extention
+            if(checkFilePathExt(file_name)):
+                filtered_list.append(file_name)
 
-    return filteredList
+    return filtered_list
 
 def getDirList(path):
     '''
@@ -126,12 +125,12 @@ def sendSlackPhoto(filePath, channel, text):
     '''
     # upload a file
     with open(filePath, 'rb') as f:
-        imgParam = {
+        img_param = {
             'token': g_settings['slackToken'],
             'channels': channel,
             'title': os.path.basename(filePath)
         }
-        r = requests.post('https://slack.com/api/files.upload', params=imgParam, files={'file':f})
+        r = requests.post('https://slack.com/api/files.upload', params=img_param, files={'file':f})
         print r.status_code
 
 def sendSlackText(channel, text):
@@ -139,8 +138,8 @@ def sendSlackText(channel, text):
     post a message to Slack
     '''
     # post a message
-    sendUrl = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
-    r = requests.post(sendUrl)
+    send_url = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
+    r = requests.post(send_url)
     print r.status_code
 
 def loadSettings():
@@ -151,8 +150,8 @@ def loadSettings():
 
     # check setting file exists
     if (os.path.exists(g_settingPath)):
-        settingFile = open(g_settingPath, 'r')
-        g_settings = json.load(settingFile)
+        setting_file = open(g_settingPath, 'r')
+        g_settings = json.load(setting_file)
         return True
 
     return False
