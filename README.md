@@ -14,7 +14,7 @@ tested with Linux (Raspberry pi) and macOSX 10.13
 * Clone this repository.
 
 ```bash
-git clone https://github.com/thesaitama/slackphoto.git
+> git clone https://github.com/thesaitama/slackphoto.git
 ```
 
 * Install PIP.
@@ -47,9 +47,9 @@ git clone https://github.com/thesaitama/slackphoto.git
   ```
 
 + slackRemoveLimitDay: uploaded files delete after specified days.
-+ repeatCount: repeat times.(optional)
-+ dirs: multiple folders can be specified.
-+ dirsIgnore: ignore path list, also multiple set floders. (optional)
++ repeatCount: repeat times. (optional)
++ dirs: multiple folders can be set.
++ dirsIgnore: ignore path list, also multiple floders can be set. (optional)
 
 * Set crontab
 
