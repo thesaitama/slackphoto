@@ -5,12 +5,11 @@
 
 # PIL Image Info
 from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
+from PIL.ExifTags import TAGS
 
 def getExifInfo(filePath, debugMode=False):
-    '''
-    obtatin exif imformation
-    '''
+    """ obtatin exif information
+    """
     i = Image.open(filePath)
     exif = i._getexif()
 
@@ -18,7 +17,7 @@ def getExifInfo(filePath, debugMode=False):
     if (exif is None):
         return 'no Exif data.'
 
-    output_str = '' # output string
+    output_str = ''  # output string
 
     raw_date = ''
     date_str = ''
@@ -58,6 +57,7 @@ def getExifInfo(filePath, debugMode=False):
         output_str += ' (%s)' % software
 
     return output_str
+
 
 if __name__ == '__main__':
     print getExifInfo('test/test.jpg', True)

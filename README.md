@@ -1,5 +1,5 @@
 # slackphoto
-A randam photo uploader for Slack. This Script post your photos at random to Slack.
+A randam photo uploader for Slack. This Script post your photos to Slack randomly.
 You will discover unexpected discoveries when used between families.
 
 ## Requirements
@@ -40,7 +40,8 @@ pip install -r requirements.txt
   ```
   + slackRemoveLimitDay: uploaded files delete after specified days.
   + repeatCount: repeat times.
-  + dirs: multiple folder can be specified.
+  + dirs: multiple folders can be specified.
+  + dirsIgnore: ignore path list, also multiple set floders. (optional)
 * Set crontab
   ```
   # m h  dom mon dow   command
