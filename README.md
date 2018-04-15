@@ -12,22 +12,29 @@ tested with Linux (Raspberry pi) and macOSX 10.13
 
 ## How to Install
 * Clone this repository.
-```
+
+```bash
 git clone https://github.com/thesaitama/slackphoto.git
 ```
+
 * Install PIP.
 * Install dependencies.
+
+```bash
+> cd slackphoto
+> pip install -r requirements.txt
 ```
-cd slackphoto
-pip install -r requirements.txt
-```
+
 * Configure JSON Settings file.
   + Rename sample JSON File.
+
+  ```bash
+  > mv slackphoto.sample.json slackphoto.json
   ```
-  mv slackphoto.sample.json slackphoto.json
-  ```
+
   + Edit slackphoto.json
-  ```
+
+  ```json
   {
     "slackToken" : "<YOUR_SLACK_TOKEN>",
     "slackChannelID" : "<YOUR_SLACK_CHANNEL_ID>",
@@ -38,15 +45,18 @@ pip install -r requirements.txt
     ]
   }
   ```
-  + slackRemoveLimitDay: uploaded files delete after specified days.
-  + repeatCount: repeat times.
-  + dirs: multiple folders can be specified.
-  + dirsIgnore: ignore path list, also multiple set floders. (optional)
+
++ slackRemoveLimitDay: uploaded files delete after specified days.
++ repeatCount: repeat times.(optional)
++ dirs: multiple folders can be specified.
++ dirsIgnore: ignore path list, also multiple set floders. (optional)
+
 * Set crontab
-  ```
-  # m h  dom mon dow   command
-  0 12 * * * python /<APP_DIR>/slackphoto.py > /dev/null
-  ```
+
+```
+# m h  dom mon dow   command
+0 12 * * * python /<APP_DIR>/slackphoto.py > /dev/null
+```
 
 ## Links
 * Create New App (obtein token)

@@ -17,27 +17,26 @@ import slackoldrm as sloldrm
 
 # setting variables
 g_settings = {}
-g_settingPath = ''
-g_repeatCount = 1
 
-__version__ = '0.2.8.180415'
+__version__ = '0.2.9.180415'
 
 def slackPhotoMain():
     """ main routine
     """
 
-    global g_settingPath
-    g_settingPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'slackphoto.json')
-
     # load settings
-    loadSettings()
+    global g_settings
+    g_settings = loadSettings()
 
     paths = createPathList()
 
-    # check scheduled paths
     if(len(paths) > 0):
+        
+        repeatCount = 1
+        if 'repeatCount' in g_settings:
+            repeatCount = g_settings['repeatCount']
         # excute photoPicker
-        for index in range(0, g_settings['repeatCount']):
+        for index in range(0, repeatCount):
             photoPicker(paths)
     else:
         print 'no paths'
@@ -77,6 +76,7 @@ def selectTargetFile(paths):
         if (len(file_list) >= 1):
             file_pivot = random.randrange(0, len(file_list), 1)
             file_path = os.path.join(paths[pivot_dir], file_list[file_pivot])
+            # filter ignored path
             if (isIgnoredPath(file_path)):
                 print 'ignored: ' + file_path
                 continue
@@ -133,29 +133,34 @@ def sendSlackPhoto(filePath, channel, text):
             'channels': channel,
             'title': os.path.basename(filePath)
         }
-        r = requests.post('https://slack.com/api/files.upload', params=img_param, files={'file': f})
+        r = requests.post('https://slack.com/api/files.upload',
+                          params=img_param, files={'file': f})
         print r.status_code
 
 def sendSlackText(channel, text):
     """ post a message to Slack
     """
     # post a message
-    send_url = 'http://slack.com/api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
+    send_url = 'http://slack.com/' \
+        'api/chat.postMessage?token=%s&channel=%s&text=%s' % (g_settings['slackToken'], g_settings['slackChannelID'], text)
     r = requests.post(send_url)
     print r.status_code
 
-def loadSettings():
+def loadSettings(settingsPath=''):
     """ load settings
     """
-    global g_settings
+
+    # default path
+    if settingsPath == '':
+        settingsPath = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)), 'slackphoto.json')
 
     # check setting file exists
-    if (os.path.exists(g_settingPath)):
-        setting_file = open(g_settingPath, 'r')
-        g_settings = json.load(setting_file)
-        return True
+    if (os.path.exists(settingsPath)):
+        setting_file = open(settingsPath, 'r')
+        return json.load(setting_file)
 
-    return False
+    return {}
 
 
 if __name__ == '__main__':
